@@ -1,0 +1,725 @@
+/* 山河游记 - 样式 */
+
+:root {
+  --bg: #faf8f4;
+  --card-bg: #fff;
+  --border: #e0dcd4;
+  --text: #2c2c2c;
+  --text-secondary: #6b6560;
+  --p1-color: #c0392b;
+  --p2-color: #2874a6;
+  --accent: #d4a855;
+  --scenic-color: #27ae60;
+  --food-color: #e67e22;
+  --treasure-color: #8e44ad;
+  --move-color: #2980b9;
+}
+
+* {
+  margin: 0;
+  padding: 0;
+  box-sizing: border-box;
+}
+
+body {
+  font-family: 'PingFang SC', 'Microsoft YaHei', -apple-system, sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  min-height: 100vh;
+}
+
+/* Setup Screen */
+#setup-screen {
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.setup-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 3rem;
+  max-width: 480px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+.setup-card h1 {
+  font-size: 2.2rem;
+  margin-bottom: 0.3rem;
+  color: var(--accent);
+  font-weight: 700;
+}
+
+.setup-card .subtitle {
+  color: var(--text-secondary);
+  margin-bottom: 2rem;
+  font-size: 0.95rem;
+}
+
+.setup-row {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+  margin-bottom: 1.2rem;
+}
+
+.setup-row label {
+  font-weight: 600;
+  min-width: 80px;
+  text-align: right;
+}
+
+.setup-row select {
+  flex: 1;
+  padding: 0.6rem 1rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--bg);
+  appearance: none;
+}
+
+.setup-row input[type="text"] {
+  flex: 0 0 7rem;
+  padding: 0.6rem 0.9rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  font-size: 1rem;
+  background: var(--bg);
+  font-family: inherit;
+}
+
+.p1-label { color: var(--p1-color); }
+.p2-label { color: var(--p2-color); }
+
+#start-game-btn {
+  margin-top: 1.5rem;
+  padding: 0.8rem 2.5rem;
+  font-size: 1.1rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+  transition: transform 0.1s, box-shadow 0.2s;
+}
+
+#start-game-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 168, 85, 0.4);
+}
+
+/* Game Screen */
+#game-screen {
+  display: none;
+  grid-template-columns: 200px 1fr 260px;
+  grid-template-rows: 44px 1fr 140px;
+  gap: 0;
+  height: 100vh;
+  overflow: hidden;
+}
+
+.game-header { grid-column: 1 / -1; grid-row: 1; }
+.player-panel { grid-column: 1; grid-row: 2 / 4; }
+.map-container { grid-column: 2; grid-row: 2; min-height: 0; }
+#city-info { grid-column: 2; grid-row: 3; }
+.right-panel { grid-column: 3; grid-row: 2 / 4; }
+
+/* Header */
+.game-header {
+  grid-column: 1 / -1;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.6rem 1.2rem;
+  background: var(--card-bg);
+  border-bottom: 1px solid var(--border);
+}
+
+.game-header h2 {
+  font-size: 1.1rem;
+  color: var(--accent);
+}
+
+#round-display {
+  font-weight: 600;
+  font-size: 1rem;
+}
+
+#turn-display {
+  font-weight: 700;
+  font-size: 1.05rem;
+}
+
+#event-display {
+  font-size: 0.85rem;
+  background: #fef9e7;
+  padding: 0.3rem 0.8rem;
+  border-radius: 6px;
+  border: 1px solid #f9e79f;
+}
+
+.event-name {
+  font-weight: 700;
+  color: var(--accent);
+}
+
+/* Left Panel - Player Info */
+.player-panel {
+  padding: 0.5rem;
+  overflow-y: auto;
+  border-right: 1px solid var(--border);
+  background: var(--card-bg);
+  font-size: 0.85rem;
+}
+
+.player-card {
+  border: 2px solid var(--border);
+  border-radius: 10px;
+  padding: 0.8rem;
+  margin-bottom: 0.8rem;
+  transition: border-color 0.2s, box-shadow 0.2s;
+}
+
+.player-card.active {
+  box-shadow: 0 0 0 2px rgba(212, 168, 85, 0.3);
+}
+
+.player-card:first-child {
+  border-color: rgba(192, 57, 43, 0.3);
+}
+.player-card:first-child.active {
+  border-color: var(--p1-color);
+}
+
+.player-card:last-child {
+  border-color: rgba(40, 116, 166, 0.3);
+}
+.player-card:last-child.active {
+  border-color: var(--p2-color);
+}
+
+.p-name {
+  font-weight: 700;
+  font-size: 1rem;
+  margin-bottom: 0.4rem;
+}
+
+.player-card:first-child .p-name { color: var(--p1-color); }
+.player-card:last-child .p-name { color: var(--p2-color); }
+
+.p-stats {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 0.3rem;
+  font-size: 0.85rem;
+  margin-bottom: 0.6rem;
+}
+
+.stat-item {
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+}
+
+.stat-icon {
+  font-size: 0.9rem;
+}
+
+.stat-value {
+  font-weight: 600;
+}
+
+.p-collections {
+  font-size: 0.75rem;
+  color: var(--text-secondary);
+  line-height: 1.5;
+}
+
+.p-collections strong {
+  color: var(--text);
+}
+
+.collection-detail {
+  margin-top: 0.2rem;
+  word-break: break-all;
+}
+
+/* Center - Map */
+.map-container {
+  position: relative;
+  overflow: hidden;
+  background: #f5f0e8;
+  display: flex;
+  align-items: stretch;
+}
+
+#game-map {
+  width: 100%;
+  height: 100%;
+  flex: 1;
+}
+
+.city-node circle {
+  transition: fill 0.2s, r 0.2s;
+}
+
+.city-node:hover circle {
+  fill: #fef3c7 !important;
+  r: 11;
+}
+
+.city-node.highlight circle {
+  fill: #fef3c7 !important;
+  stroke: var(--accent);
+  stroke-width: 2.5;
+  r: 11;
+  animation: pulse 1.2s ease-in-out infinite;
+}
+
+@keyframes pulse {
+  0%, 100% { r: 10; }
+  50% { r: 12; }
+}
+
+.city-label {
+  font-size: 9px;
+  fill: var(--text);
+  font-weight: 500;
+  pointer-events: none;
+}
+
+.dist-label {
+  font-size: 8px;
+  fill: var(--text-secondary);
+  pointer-events: none;
+}
+
+.player-marker {
+  transition: transform 0.3s;
+  filter: drop-shadow(0 1px 2px rgba(0,0,0,0.3));
+}
+
+/* City Info */
+#city-info {
+  padding: 0.6rem 1rem;
+  background: var(--card-bg);
+  border-top: 1px solid var(--border);
+  grid-column: 2;
+  font-size: 0.85rem;
+  overflow-y: auto;
+}
+
+#city-info h3 {
+  font-size: 1rem;
+  margin-bottom: 0.3rem;
+  color: var(--accent);
+}
+
+.info-section {
+  margin-bottom: 0.3rem;
+}
+
+.info-section span {
+  display: inline-block;
+  padding: 0.1rem 0.4rem;
+  margin: 0.1rem;
+  border-radius: 4px;
+  font-size: 0.8rem;
+}
+
+.info-section .available {
+  background: #eafaf1;
+  color: #1a7a42;
+}
+
+.info-section .taken {
+  background: #f0f0f0;
+  color: #999;
+  text-decoration: line-through;
+}
+
+/* Right Panel - Actions */
+.right-panel {
+  display: flex;
+  flex-direction: column;
+  border-left: 1px solid var(--border);
+  background: var(--card-bg);
+  overflow: hidden;
+}
+
+#actions-panel {
+  flex: 1;
+  overflow-y: auto;
+  padding: 0.8rem;
+}
+
+.actions-remaining {
+  text-align: center;
+  font-weight: 700;
+  font-size: 0.95rem;
+  padding: 0.4rem;
+  margin-bottom: 0.6rem;
+  background: #fef9e7;
+  border-radius: 6px;
+}
+
+.action-group {
+  margin-bottom: 0.8rem;
+}
+
+.action-group-title {
+  font-weight: 600;
+  font-size: 0.85rem;
+  margin-bottom: 0.3rem;
+  color: var(--text-secondary);
+}
+
+.action-btn {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  width: 100%;
+  padding: 0.5rem 0.7rem;
+  margin-bottom: 0.3rem;
+  border: 1px solid var(--border);
+  border-radius: 8px;
+  background: var(--card-bg);
+  cursor: pointer;
+  font-size: 0.85rem;
+  text-align: left;
+  transition: background 0.15s, border-color 0.15s;
+  gap: 0.4rem;
+  flex-wrap: wrap;
+}
+
+.action-btn:hover {
+  background: #fef9e7;
+  border-color: var(--accent);
+}
+
+.move-btn:hover { border-color: var(--move-color); background: #eaf2f8; }
+.scenic-btn:hover { border-color: var(--scenic-color); background: #eafaf1; }
+.food-btn:hover { border-color: var(--food-color); background: #fef5e7; }
+.treasure-btn:hover { border-color: var(--treasure-color); background: #f4ecf7; }
+
+.cost-tag {
+  font-size: 0.75rem;
+  background: #f0ede8;
+  padding: 0.1rem 0.4rem;
+  border-radius: 4px;
+  color: var(--text-secondary);
+  white-space: nowrap;
+}
+
+.cuisine-tag {
+  font-size: 0.7rem;
+  background: #fdebd0;
+  padding: 0.1rem 0.3rem;
+  border-radius: 3px;
+  color: #a04000;
+}
+
+.ability-tag {
+  font-size: 0.7rem;
+  color: var(--treasure-color);
+  flex-basis: 100%;
+}
+
+.other-btn {
+  text-align: center;
+  justify-content: center;
+  background: #f8f6f2;
+  color: var(--text-secondary);
+}
+
+/* Log */
+#game-log {
+  height: 140px;
+  overflow-y: auto;
+  padding: 0.5rem 0.8rem;
+  border-top: 1px solid var(--border);
+  font-size: 0.78rem;
+  background: #faf8f4;
+}
+
+.log-entry {
+  padding: 0.15rem 0;
+  border-bottom: 1px solid #f0ede8;
+}
+
+.log-round {
+  color: var(--accent);
+  font-weight: 600;
+  margin-right: 0.4rem;
+}
+
+/* End Screen */
+#end-screen {
+  display: none;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  min-height: 100vh;
+  padding: 2rem;
+}
+
+.end-card {
+  background: var(--card-bg);
+  border: 1px solid var(--border);
+  border-radius: 16px;
+  padding: 2.5rem;
+  max-width: 600px;
+  width: 100%;
+  text-align: center;
+  box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+}
+
+#winner-display {
+  font-size: 2rem;
+  font-weight: 700;
+  margin-bottom: 1.5rem;
+}
+
+.score-table {
+  width: 100%;
+  border-collapse: collapse;
+  margin-bottom: 1.5rem;
+  font-size: 0.9rem;
+}
+
+.score-table th, .score-table td {
+  padding: 0.4rem 0.8rem;
+  border-bottom: 1px solid var(--border);
+  text-align: center;
+}
+
+.score-table th {
+  background: #faf8f4;
+  font-weight: 600;
+}
+
+.score-table th:first-child, .score-table td:first-child {
+  text-align: left;
+}
+
+.total-row td {
+  border-top: 2px solid var(--accent);
+  font-size: 1.1rem;
+}
+
+.journey-summary {
+  display: flex;
+  gap: 1.5rem;
+  text-align: left;
+  margin-bottom: 1.5rem;
+}
+
+.journey {
+  flex: 1;
+  padding: 0.8rem;
+  background: #faf8f4;
+  border-radius: 8px;
+  font-size: 0.85rem;
+}
+
+.journey h4 {
+  margin-bottom: 0.4rem;
+  color: var(--accent);
+}
+
+.journey p {
+  margin-bottom: 0.2rem;
+}
+
+#restart-btn {
+  padding: 0.7rem 2rem;
+  font-size: 1rem;
+  font-weight: 600;
+  background: var(--accent);
+  color: #fff;
+  border: none;
+  border-radius: 10px;
+  cursor: pointer;
+}
+
+#restart-btn:hover {
+  transform: translateY(-1px);
+  box-shadow: 0 4px 12px rgba(212, 168, 85, 0.4);
+}
+
+.waiting {
+  text-align: center;
+  padding: 2rem;
+  color: var(--text-secondary);
+}
+
+/* Responsive */
+@media (max-width: 1024px) {
+  #game-screen {
+    grid-template-columns: 200px 1fr 240px;
+  }
+}
+
+@media (max-width: 768px) {
+  #game-screen {
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 300px auto auto auto;
+    height: auto;
+    min-height: 100vh;
+  }
+
+  .player-panel {
+    display: flex;
+    gap: 0.5rem;
+    border-right: none;
+    border-bottom: 1px solid var(--border);
+    padding: 0.5rem;
+  }
+
+  .player-card {
+    flex: 1;
+    margin-bottom: 0;
+  }
+
+  .map-container {
+    min-height: 300px;
+  }
+
+  .right-panel {
+    border-left: none;
+    border-top: 1px solid var(--border);
+  }
+}
+
+/* ===== Card Info Button & Modal ===== */
+.info-btn {
+  display: inline-flex;
+  align-items: center;
+  justify-content: center;
+  width: 18px;
+  height: 18px;
+  margin-left: 6px;
+  border: 1px solid currentColor;
+  border-radius: 50%;
+  background: transparent;
+  color: inherit;
+  font-size: 11px;
+  font-style: italic;
+  font-family: serif;
+  font-weight: bold;
+  cursor: pointer;
+  opacity: 0.55;
+  flex-shrink: 0;
+  padding: 0;
+  line-height: 1;
+}
+.info-btn:hover {
+  opacity: 1;
+  background: rgba(255, 255, 255, 0.15);
+}
+
+.action-btn .info-btn {
+  vertical-align: middle;
+}
+
+#city-info .info-btn {
+  width: 16px;
+  height: 16px;
+  font-size: 10px;
+  margin-left: 3px;
+}
+
+.info-link {
+  cursor: pointer;
+  text-decoration: underline;
+  text-decoration-style: dotted;
+  text-decoration-color: rgba(0, 0, 0, 0.3);
+}
+.info-link:hover {
+  color: var(--p1-color);
+}
+
+#card-modal {
+  position: fixed;
+  inset: 0;
+  z-index: 1000;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+#card-modal.modal-hidden {
+  display: none;
+}
+.modal-backdrop {
+  position: absolute;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(2px);
+}
+.modal-content {
+  position: relative;
+  max-width: 520px;
+  width: calc(100% - 40px);
+  max-height: 80vh;
+  overflow-y: auto;
+  background: #fdf8f0;
+  border-radius: 10px;
+  padding: 22px 26px 24px;
+  box-shadow: 0 12px 40px rgba(0, 0, 0, 0.4);
+  color: #2a1f15;
+  font-family: 'Noto Serif SC', 'Songti SC', serif;
+}
+.modal-close {
+  position: absolute;
+  top: 8px;
+  right: 12px;
+  width: 30px;
+  height: 30px;
+  border: none;
+  background: transparent;
+  font-size: 24px;
+  cursor: pointer;
+  color: #6a5544;
+  line-height: 1;
+}
+.modal-close:hover { color: #2a1f15; }
+.modal-header {
+  border-bottom: 1px solid #d9c8b0;
+  padding-bottom: 10px;
+  margin-bottom: 14px;
+}
+#modal-title {
+  margin: 0 0 4px 0;
+  font-size: 22px;
+  font-weight: 600;
+  color: #2a1f15;
+}
+#modal-meta {
+  font-size: 13px;
+  color: #8a7560;
+}
+#modal-body {
+  font-size: 15px;
+  line-height: 1.75;
+  color: #3a2c1e;
+  text-align: justify;
+}
+.modal-image {
+  display: block;
+  width: 100%;
+  max-height: 280px;
+  object-fit: cover;
+  border-radius: 6px;
+  margin: 0 0 14px 0;
+}
+.modal-text {
+  margin: 0;
+}

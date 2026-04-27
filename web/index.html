@@ -1,0 +1,121 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>山河游记 — 中国高铁旅行桌游</title>
+  <link rel="stylesheet" href="css/style.css">
+</head>
+<body>
+
+  <!-- Setup Screen -->
+  <div id="setup-screen">
+    <div class="setup-card">
+      <h1>山河游记</h1>
+      <p class="subtitle">中国高铁旅行 · 2人对战 · 12天</p>
+      <div class="setup-row">
+        <label class="p1-label">旅行者一</label>
+        <input id="p1-name" type="text" maxlength="8" placeholder="名字" />
+        <select id="p1-start"></select>
+      </div>
+      <div class="setup-row">
+        <label class="p2-label">旅行者二</label>
+        <input id="p2-name" type="text" maxlength="8" placeholder="名字" />
+        <select id="p2-start"></select>
+      </div>
+      <button id="start-game-btn">出发</button>
+    </div>
+  </div>
+
+  <!-- Game Screen -->
+  <div id="game-screen">
+    <!-- Header -->
+    <header class="game-header">
+      <h2>山河游记</h2>
+      <span id="round-display"></span>
+      <span id="turn-display"></span>
+      <span id="event-display"></span>
+    </header>
+
+    <!-- Left: Player Panels -->
+    <div class="player-panel">
+      <div id="player1-panel" class="player-card">
+        <div class="p-name"></div>
+        <div class="p-stats">
+          <div class="stat-item"><span class="stat-icon">📍</span><span class="p-city stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">⚡</span><span class="p-stamina stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">💰</span><span class="p-money stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">🏙️</span><span class="p-cities-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">📸</span><span class="p-scenic-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">🍜</span><span class="p-food-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">💎</span><span class="p-treasure-count stat-value"></span></div>
+        </div>
+        <div class="p-collections">
+          <div class="collection-detail"><strong>景区：</strong><span class="p-scenic-list">—</span></div>
+          <div class="collection-detail"><strong>美食：</strong><span class="p-food-list">—</span></div>
+          <div class="collection-detail"><strong>瑰宝：</strong><span class="p-treasure-list">—</span></div>
+        </div>
+      </div>
+      <div id="player2-panel" class="player-card">
+        <div class="p-name"></div>
+        <div class="p-stats">
+          <div class="stat-item"><span class="stat-icon">📍</span><span class="p-city stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">⚡</span><span class="p-stamina stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">💰</span><span class="p-money stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">🏙️</span><span class="p-cities-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">📸</span><span class="p-scenic-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">🍜</span><span class="p-food-count stat-value"></span></div>
+          <div class="stat-item"><span class="stat-icon">💎</span><span class="p-treasure-count stat-value"></span></div>
+        </div>
+        <div class="p-collections">
+          <div class="collection-detail"><strong>景区：</strong><span class="p-scenic-list">—</span></div>
+          <div class="collection-detail"><strong>美食：</strong><span class="p-food-list">—</span></div>
+          <div class="collection-detail"><strong>瑰宝：</strong><span class="p-treasure-list">—</span></div>
+        </div>
+      </div>
+    </div>
+
+    <!-- Center: Map -->
+    <div class="map-container">
+      <svg id="game-map" viewBox="100 10 750 630" preserveAspectRatio="xMidYMid meet"></svg>
+    </div>
+
+    <!-- City Info -->
+    <div id="city-info"></div>
+
+    <!-- Right: Actions + Log -->
+    <div class="right-panel">
+      <div id="actions-panel"></div>
+      <div id="game-log"></div>
+    </div>
+  </div>
+
+  <!-- End Screen -->
+  <div id="end-screen">
+    <div class="end-card">
+      <div id="winner-display"></div>
+      <div id="score-breakdown"></div>
+      <button id="restart-btn">再来一局</button>
+    </div>
+  </div>
+
+  <!-- Card Description Modal -->
+  <div id="card-modal" class="modal-hidden">
+    <div class="modal-backdrop" onclick="ui.hideCardInfo()"></div>
+    <div class="modal-content">
+      <button class="modal-close" onclick="ui.hideCardInfo()">×</button>
+      <div class="modal-header">
+        <h3 id="modal-title"></h3>
+        <div id="modal-meta"></div>
+      </div>
+      <div id="modal-body"></div>
+    </div>
+  </div>
+
+  <script src="js/data.js"></script>
+  <script src="js/descriptions.js"></script>
+  <script src="js/game.js"></script>
+  <script src="js/map.js"></script>
+  <script src="js/ui.js"></script>
+</body>
+</html>
