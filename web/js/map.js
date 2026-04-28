@@ -36,13 +36,13 @@ class GameMap {
     const bgImg = document.createElementNS(ns, 'image');
     bgImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'img/map-bg.jpg');
     bgImg.setAttribute('href', 'img/map-bg.jpg');
-    bgImg.setAttribute('x', '2');
-    bgImg.setAttribute('y', '-25');
-    bgImg.setAttribute('width', '1210');
-    bgImg.setAttribute('height', '680');
+    bgImg.setAttribute('x', '-60');
+    bgImg.setAttribute('y', '-50');
+    bgImg.setAttribute('width', '1400');
+    bgImg.setAttribute('height', '730');
     bgImg.setAttribute('preserveAspectRatio', 'none');
     bgImg.setAttribute('clip-path', 'url(#map-clip)');
-    bgImg.setAttribute('opacity', '0.85');
+    bgImg.setAttribute('opacity', '0.55');
     this.svg.appendChild(bgImg);
 
     // Draw rail connections first (below cities)
