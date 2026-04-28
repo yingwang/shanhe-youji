@@ -294,29 +294,32 @@ class GameUI {
   }
 
   showCardInfo(kind, id) {
-    let card, meta;
+    let card, meta, imgDir;
     if (kind === 'scenic') {
       card = SCENIC_CARDS.find(c => c.id === id);
       if (!card) return;
       const city = CITIES[card.city];
       meta = `${city ? city.name : ''} · 景区 · 基础 ${card.baseScore} 分${card.bonus ? '｜' + card.bonus : ''}`;
+      imgDir = 'scenics';
     } else if (kind === 'food') {
       card = FOOD_CARDS.find(c => c.id === id);
       if (!card) return;
       const city = CITIES[card.city];
       meta = `${city ? city.name : ''} · ${card.cuisine} · ${card.cost} 金`;
+      imgDir = 'foods';
     } else if (kind === 'treasure') {
       card = TREASURE_CARDS.find(c => c.id === id);
       if (!card) return;
       const city = CITIES[card.city];
       meta = `${city ? city.name : ''} · 瑰宝 · ${card.cost} 金 · 终局 ${card.score} 分${card.ability ? '｜' + card.ability : ''}`;
+      imgDir = 'treasures';
     } else {
       return;
     }
     const desc = (typeof CARD_DESCRIPTIONS !== 'undefined' && CARD_DESCRIPTIONS[id]) || '';
     document.getElementById('modal-title').textContent = card.name;
     document.getElementById('modal-meta').textContent = meta;
-    this.setModalBody(desc, null);
+    this.setModalBody(desc, `img/${imgDir}/${id}.jpg`);
     document.getElementById('card-modal').classList.remove('modal-hidden');
   }
 
