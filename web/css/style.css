@@ -256,7 +256,12 @@ body {
 .map-container {
   position: relative;
   overflow: hidden;
-  background: #f5f0e8;
+  background-color: #f5f0e8;
+  background-image:
+    linear-gradient(rgba(247, 238, 213, 0.45), rgba(247, 238, 213, 0.45)),
+    url('img/map-bg.jpg');
+  background-size: 100% 100%, 100% 100%;
+  background-repeat: no-repeat, no-repeat;
   display: flex;
   align-items: stretch;
 }

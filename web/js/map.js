@@ -11,39 +11,8 @@ class GameMap {
     this.svg.innerHTML = '';
     const ns = 'http://www.w3.org/2000/svg';
 
-    // 背景 — 青绿山水 + 高铁底图
-    const defs = document.createElementNS(ns, 'defs');
-    defs.innerHTML = `
-      <clipPath id="map-clip">
-        <rect x="100" y="10" width="750" height="630" rx="12"/>
-      </clipPath>
-    `;
-    this.svg.appendChild(defs);
-
-    // 米黄底打底，万一图载不出来或透出来不至于露黑底
-    const paper = document.createElementNS(ns, 'rect');
-    paper.setAttribute('x', '100');
-    paper.setAttribute('y', '10');
-    paper.setAttribute('width', '750');
-    paper.setAttribute('height', '630');
-    paper.setAttribute('fill', '#f7eed5');
-    paper.setAttribute('rx', '12');
-    this.svg.appendChild(paper);
-
-    // 手动定位放大 — 让 China 中心（图 px≈400, 250）落到地图中心 svg(475, 325)
-    // 图原始 1024×532。以高度铺满 630 为基准，scale=1.184，宽度=1213
-    // 但还要把"偏左的 China"挪到中央，所以再放大并左移
-    const bgImg = document.createElementNS(ns, 'image');
-    bgImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'img/map-bg.jpg');
-    bgImg.setAttribute('href', 'img/map-bg.jpg');
-    bgImg.setAttribute('x', '100');
-    bgImg.setAttribute('y', '10');
-    bgImg.setAttribute('width', '750');
-    bgImg.setAttribute('height', '630');
-    bgImg.setAttribute('preserveAspectRatio', 'xMidYMid meet');
-    bgImg.setAttribute('clip-path', 'url(#map-clip)');
-    bgImg.setAttribute('opacity', '0.55');
-    this.svg.appendChild(bgImg);
+    // 背景 — 在 .map-container CSS 里做（background-image），不在 SVG 里画
+    // 这样图随容器拉伸填满，但 SVG 内的城市/铁路保持原比例
 
     // Draw rail connections first (below cities)
     for (const [a, b, dist] of RAIL_CONNECTIONS) {
