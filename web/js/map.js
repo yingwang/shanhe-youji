@@ -20,16 +20,29 @@ class GameMap {
     `;
     this.svg.appendChild(defs);
 
+    // 米黄底打底，万一图载不出来或透出来不至于露黑底
+    const paper = document.createElementNS(ns, 'rect');
+    paper.setAttribute('x', '100');
+    paper.setAttribute('y', '10');
+    paper.setAttribute('width', '750');
+    paper.setAttribute('height', '630');
+    paper.setAttribute('fill', '#f7eed5');
+    paper.setAttribute('rx', '12');
+    this.svg.appendChild(paper);
+
+    // 手动定位放大 — 让 China 中心（图 px≈400, 250）落到地图中心 svg(475, 325)
+    // 图原始 1024×532。以高度铺满 630 为基准，scale=1.184，宽度=1213
+    // 但还要把"偏左的 China"挪到中央，所以再放大并左移
     const bgImg = document.createElementNS(ns, 'image');
     bgImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'img/map-bg.jpg');
     bgImg.setAttribute('href', 'img/map-bg.jpg');
-    bgImg.setAttribute('x', '100');
-    bgImg.setAttribute('y', '10');
-    bgImg.setAttribute('width', '750');
-    bgImg.setAttribute('height', '630');
-    bgImg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
+    bgImg.setAttribute('x', '2');
+    bgImg.setAttribute('y', '-25');
+    bgImg.setAttribute('width', '1210');
+    bgImg.setAttribute('height', '680');
+    bgImg.setAttribute('preserveAspectRatio', 'none');
     bgImg.setAttribute('clip-path', 'url(#map-clip)');
-    bgImg.setAttribute('opacity', '0.65');
+    bgImg.setAttribute('opacity', '0.85');
     this.svg.appendChild(bgImg);
 
     // Draw rail connections first (below cities)
