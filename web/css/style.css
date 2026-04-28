@@ -119,7 +119,7 @@ body {
 /* Game Screen */
 #game-screen {
   display: none;
-  grid-template-columns: 200px 1fr 260px;
+  grid-template-columns: 260px 1fr 320px;
   grid-template-rows: 44px 1fr 140px;
   gap: 0;
   height: 100vh;
@@ -573,7 +573,7 @@ body {
 /* Responsive */
 @media (max-width: 1024px) {
   #game-screen {
-    grid-template-columns: 200px 1fr 240px;
+    grid-template-columns: 230px 1fr 280px;
   }
 }
 
