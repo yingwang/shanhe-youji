@@ -302,24 +302,14 @@ body {
   pointer-events: none;
 }
 
-.region-label {
-  font-size: 13px;
-  fill: #b09060;
-  font-weight: 600;
+.ink-title {
+  font-size: 38px;
+  fill: #1a1a1e;
+  font-weight: 400;
+  opacity: 0.16;
+  pointer-events: none;
+  font-family: "STKaiti", "KaiTi", "STSong", serif;
   letter-spacing: 4px;
-  opacity: 0.45;
-  pointer-events: none;
-  font-family: "STKaiti", "KaiTi", serif;
-}
-
-.sea-label {
-  font-size: 16px;
-  fill: #5a8aa6;
-  font-weight: 500;
-  letter-spacing: 2px;
-  opacity: 0.5;
-  pointer-events: none;
-  font-family: "STKaiti", "KaiTi", serif;
 }
 
 .player-marker {

@@ -11,98 +11,149 @@ class GameMap {
     this.svg.innerHTML = '';
     const ns = 'http://www.w3.org/2000/svg';
 
-    // Background — gradient sea + paper-tone land
+    // 水墨画风格 — 宣纸底，无国境线，山远水流
     const defs = document.createElementNS(ns, 'defs');
     defs.innerHTML = `
-      <radialGradient id="sea-grad" cx="100%" cy="50%" r="80%">
-        <stop offset="0%" stop-color="#cfe1ee"/>
-        <stop offset="100%" stop-color="#e6efe2"/>
+      <filter id="ink-soft" x="-20%" y="-20%" width="140%" height="140%">
+        <feGaussianBlur stdDeviation="3"/>
+      </filter>
+      <filter id="ink-mist" x="-30%" y="-30%" width="160%" height="160%">
+        <feGaussianBlur stdDeviation="10"/>
+      </filter>
+      <filter id="paper-noise" x="0%" y="0%" width="100%" height="100%">
+        <feTurbulence type="fractalNoise" baseFrequency="0.9" numOctaves="2" seed="3"/>
+        <feColorMatrix values="0 0 0 0 0.55  0 0 0 0 0.42  0 0 0 0 0.25  0 0 0 0.06 0"/>
+      </filter>
+      <radialGradient id="paper-tone" cx="50%" cy="45%" r="75%">
+        <stop offset="0%" stop-color="#f8f0dc"/>
+        <stop offset="100%" stop-color="#ecdfbf"/>
       </radialGradient>
-      <linearGradient id="land-grad" x1="0%" y1="0%" x2="0%" y2="100%">
-        <stop offset="0%" stop-color="#f6efd9"/>
-        <stop offset="100%" stop-color="#ecdfb8"/>
-      </linearGradient>
     `;
     this.svg.appendChild(defs);
 
+    // 宣纸底
     const bg = document.createElementNS(ns, 'rect');
     bg.setAttribute('x', '100');
     bg.setAttribute('y', '10');
     bg.setAttribute('width', '750');
     bg.setAttribute('height', '630');
-    bg.setAttribute('fill', 'url(#sea-grad)');
+    bg.setAttribute('fill', 'url(#paper-tone)');
     bg.setAttribute('rx', '12');
     this.svg.appendChild(bg);
 
-    // Stylized China outline — clockwise from NW Xinjiang
-    const chinaOutline =
-      'M 130,150 L 195,128 L 260,100 L 330,75 L 400,55 L 480,42 L 560,38 L 640,40 L 720,55 L 780,80 ' +
-      'L 815,115 L 825,150 L 800,180 L 770,195 L 760,225 L 780,240 L 775,265 L 745,275 L 725,300 ' +
-      'L 720,325 L 765,340 L 775,365 L 760,395 L 745,425 L 730,455 L 720,485 L 705,515 L 680,545 ' +
-      'L 640,560 L 590,565 L 540,570 L 490,575 L 450,580 L 425,560 L 405,545 L 365,560 L 325,555 ' +
-      'L 295,535 L 270,505 L 240,475 L 200,455 L 165,440 L 130,420 L 110,390 L 105,355 L 115,320 ' +
-      'L 110,280 L 105,240 L 115,205 L 105,175 L 130,150 Z';
+    // 纸纹颗粒
+    const noise = document.createElementNS(ns, 'rect');
+    noise.setAttribute('x', '100');
+    noise.setAttribute('y', '10');
+    noise.setAttribute('width', '750');
+    noise.setAttribute('height', '630');
+    noise.setAttribute('filter', 'url(#paper-noise)');
+    noise.setAttribute('rx', '12');
+    noise.setAttribute('opacity', '0.5');
+    this.svg.appendChild(noise);
 
-    const land = document.createElementNS(ns, 'path');
-    land.setAttribute('d', chinaOutline);
-    land.setAttribute('fill', 'url(#land-grad)');
-    land.setAttribute('stroke', '#a89066');
-    land.setAttribute('stroke-width', '1.5');
-    land.setAttribute('stroke-linejoin', 'round');
-    land.setAttribute('opacity', '0.95');
-    this.svg.appendChild(land);
-
-    // 黄河 — wavy line from Lanzhou bend to Bohai
-    const yellowRiver = document.createElementNS(ns, 'path');
-    yellowRiver.setAttribute('d',
-      'M 200,225 Q 280,210 360,235 Q 410,255 430,210 Q 450,180 500,205 Q 540,225 580,260 Q 620,275 670,255 Q 715,240 755,235');
-    yellowRiver.setAttribute('fill', 'none');
-    yellowRiver.setAttribute('stroke', '#c89860');
-    yellowRiver.setAttribute('stroke-width', '1.6');
-    yellowRiver.setAttribute('stroke-linecap', 'round');
-    yellowRiver.setAttribute('opacity', '0.55');
-    this.svg.appendChild(yellowRiver);
-
-    // 长江 — west to Shanghai delta
-    const yangtze = document.createElementNS(ns, 'path');
-    yangtze.setAttribute('d',
-      'M 215,395 Q 290,400 355,395 Q 405,395 440,415 Q 480,420 530,395 Q 575,380 615,375 Q 670,365 720,355 Q 745,348 770,345');
-    yangtze.setAttribute('fill', 'none');
-    yangtze.setAttribute('stroke', '#7aa8c8');
-    yangtze.setAttribute('stroke-width', '2');
-    yangtze.setAttribute('stroke-linecap', 'round');
-    yangtze.setAttribute('opacity', '0.6');
-    this.svg.appendChild(yangtze);
-
-    // Region labels — faint
-    const regions = [
-      { x: 200, y: 165, t: '西域' },
-      { x: 250, y: 350, t: '青藏' },
-      { x: 410, y: 130, t: '蒙古' },
-      { x: 410, y: 470, t: '西南' },
-      { x: 590, y: 130, t: '华北' },
-      { x: 600, y: 480, t: '岭南' },
-      { x: 720, y: 280, t: '华东' },
+    // 远山（晕染层）— 西部高原与雪山
+    const farMtns = [
+      { d: 'M 110,260 Q 180,230 250,255 Q 310,270 360,260 Q 400,255 410,290 Q 380,310 320,305 Q 240,300 170,310 Q 130,310 110,295 Z', op: 0.13 },
+      { d: 'M 130,380 Q 200,360 270,375 Q 320,385 350,395 Q 320,420 250,415 Q 180,410 130,400 Z', op: 0.12 },
+      { d: 'M 280,500 Q 340,480 400,495 Q 440,510 420,530 Q 360,540 300,530 Q 270,520 280,500 Z', op: 0.10 },
     ];
-    for (const r of regions) {
-      const t = document.createElementNS(ns, 'text');
-      t.setAttribute('x', r.x);
-      t.setAttribute('y', r.y);
-      t.setAttribute('text-anchor', 'middle');
-      t.setAttribute('class', 'region-label');
-      t.textContent = r.t;
-      this.svg.appendChild(t);
+    for (const m of farMtns) {
+      const p = document.createElementNS(ns, 'path');
+      p.setAttribute('d', m.d);
+      p.setAttribute('fill', '#3a3a42');
+      p.setAttribute('opacity', m.op);
+      p.setAttribute('filter', 'url(#ink-mist)');
+      this.svg.appendChild(p);
     }
 
-    // 海洋 标注
-    const sea = document.createElementNS(ns, 'text');
-    sea.setAttribute('x', 820);
-    sea.setAttribute('y', 420);
-    sea.setAttribute('text-anchor', 'middle');
-    sea.setAttribute('class', 'sea-label');
-    sea.textContent = '东\n海';
-    sea.innerHTML = '<tspan x="820" dy="0">东</tspan><tspan x="820" dy="22">海</tspan>';
-    this.svg.appendChild(sea);
+    // 近山（笔锋）— 几座有形的山峰
+    const peaks = [
+      'M 180,275 L 200,250 L 220,275 M 215,278 L 235,255 L 255,280',
+      'M 285,395 L 305,365 L 325,395 M 320,400 L 340,375 L 360,400',
+      'M 305,510 L 320,490 L 340,510',
+    ];
+    for (const d of peaks) {
+      const p = document.createElementNS(ns, 'path');
+      p.setAttribute('d', d);
+      p.setAttribute('fill', 'none');
+      p.setAttribute('stroke', '#2c2c30');
+      p.setAttribute('stroke-width', '1.6');
+      p.setAttribute('stroke-linecap', 'round');
+      p.setAttribute('stroke-linejoin', 'round');
+      p.setAttribute('opacity', '0.32');
+      this.svg.appendChild(p);
+    }
+
+    // 黄河 — 浓淡变化的笔触（多层叠加）
+    const yellowD = 'M 195,225 Q 280,205 360,235 Q 410,260 432,210 Q 455,178 502,205 Q 545,228 582,262 Q 622,278 672,254 Q 720,238 760,232';
+    const yellowBlur = document.createElementNS(ns, 'path');
+    yellowBlur.setAttribute('d', yellowD);
+    yellowBlur.setAttribute('fill', 'none');
+    yellowBlur.setAttribute('stroke', '#7a5a30');
+    yellowBlur.setAttribute('stroke-width', '6');
+    yellowBlur.setAttribute('stroke-linecap', 'round');
+    yellowBlur.setAttribute('opacity', '0.18');
+    yellowBlur.setAttribute('filter', 'url(#ink-soft)');
+    this.svg.appendChild(yellowBlur);
+    const yellowLine = document.createElementNS(ns, 'path');
+    yellowLine.setAttribute('d', yellowD);
+    yellowLine.setAttribute('fill', 'none');
+    yellowLine.setAttribute('stroke', '#3c2c18');
+    yellowLine.setAttribute('stroke-width', '1.4');
+    yellowLine.setAttribute('stroke-linecap', 'round');
+    yellowLine.setAttribute('opacity', '0.45');
+    this.svg.appendChild(yellowLine);
+
+    // 长江
+    const yangtzeD = 'M 210,395 Q 290,400 355,392 Q 408,392 442,415 Q 482,422 532,395 Q 578,378 618,372 Q 672,362 722,352 Q 750,346 778,342';
+    const yangtzeBlur = document.createElementNS(ns, 'path');
+    yangtzeBlur.setAttribute('d', yangtzeD);
+    yangtzeBlur.setAttribute('fill', 'none');
+    yangtzeBlur.setAttribute('stroke', '#1e2a38');
+    yangtzeBlur.setAttribute('stroke-width', '7');
+    yangtzeBlur.setAttribute('stroke-linecap', 'round');
+    yangtzeBlur.setAttribute('opacity', '0.16');
+    yangtzeBlur.setAttribute('filter', 'url(#ink-soft)');
+    this.svg.appendChild(yangtzeBlur);
+    const yangtzeLine = document.createElementNS(ns, 'path');
+    yangtzeLine.setAttribute('d', yangtzeD);
+    yangtzeLine.setAttribute('fill', 'none');
+    yangtzeLine.setAttribute('stroke', '#202024');
+    yangtzeLine.setAttribute('stroke-width', '1.6');
+    yangtzeLine.setAttribute('stroke-linecap', 'round');
+    yangtzeLine.setAttribute('opacity', '0.5');
+    this.svg.appendChild(yangtzeLine);
+
+    // 飞鸟（点缀）
+    const birds = [
+      { x: 320, y: 130 }, { x: 350, y: 138 }, { x: 380, y: 125 },
+      { x: 720, y: 180 }, { x: 745, y: 188 },
+    ];
+    for (const b of birds) {
+      const bp = document.createElementNS(ns, 'path');
+      bp.setAttribute('d', `M ${b.x - 5},${b.y} q 2.5,-3 5,0 q 2.5,-3 5,0`);
+      bp.setAttribute('fill', 'none');
+      bp.setAttribute('stroke', '#1a1a1e');
+      bp.setAttribute('stroke-width', '0.8');
+      bp.setAttribute('stroke-linecap', 'round');
+      bp.setAttribute('opacity', '0.55');
+      this.svg.appendChild(bp);
+    }
+
+    // 题字 — 山河
+    const shan = document.createElementNS(ns, 'text');
+    shan.setAttribute('x', 175);
+    shan.setAttribute('y', 95);
+    shan.setAttribute('class', 'ink-title');
+    shan.textContent = '山';
+    this.svg.appendChild(shan);
+    const he = document.createElementNS(ns, 'text');
+    he.setAttribute('x', 800);
+    he.setAttribute('y', 600);
+    he.setAttribute('class', 'ink-title');
+    he.textContent = '河';
+    this.svg.appendChild(he);
 
     // Draw rail connections first (below cities)
     for (const [a, b, dist] of RAIL_CONNECTIONS) {
