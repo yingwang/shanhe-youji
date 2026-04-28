@@ -36,11 +36,11 @@ class GameMap {
     const bgImg = document.createElementNS(ns, 'image');
     bgImg.setAttributeNS('http://www.w3.org/1999/xlink', 'href', 'img/map-bg.jpg');
     bgImg.setAttribute('href', 'img/map-bg.jpg');
-    bgImg.setAttribute('x', '100');
+    bgImg.setAttribute('x', '140');
     bgImg.setAttribute('y', '10');
-    bgImg.setAttribute('width', '750');
+    bgImg.setAttribute('width', '710');
     bgImg.setAttribute('height', '630');
-    bgImg.setAttribute('preserveAspectRatio', 'none');
+    bgImg.setAttribute('preserveAspectRatio', 'xMaxYMid meet');
     bgImg.setAttribute('clip-path', 'url(#map-clip)');
     bgImg.setAttribute('opacity', '0.55');
     this.svg.appendChild(bgImg);
