@@ -40,7 +40,7 @@ class GameMap {
     bgImg.setAttribute('y', '10');
     bgImg.setAttribute('width', '750');
     bgImg.setAttribute('height', '630');
-    bgImg.setAttribute('preserveAspectRatio', 'none');
+    bgImg.setAttribute('preserveAspectRatio', 'xMidYMid slice');
     bgImg.setAttribute('clip-path', 'url(#map-clip)');
     bgImg.setAttribute('opacity', '0.55');
     this.svg.appendChild(bgImg);
