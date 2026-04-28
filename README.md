@@ -21,4 +21,6 @@
 
 ## 版权
 
-CC BY-NC-SA 4.0
+- **代码**（`web/js/`、`web/css/`、`scripts/`、`web/index.html`）：[MIT](LICENSE)
+- **文字内容**（仓库根目录所有 `*.md`）：[CC BY-SA 4.0](LICENSE-CONTENT)
+- **城市/景区/美食/瑰宝图片**（`web/img/`）：来源于 Wikimedia Commons，按 [`web/img/attribution.json`](web/img/attribution.json) 所列各自原许可（CC BY 2.0 / CC BY 4.0 / CC BY-SA 3.0 / CC BY-SA 4.0）发布。
