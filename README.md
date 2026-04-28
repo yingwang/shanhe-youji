@@ -8,8 +8,9 @@
 
 ## 文档
 
-- [game-design.md](game-design.md) — 完整规则书
-- [cities.md](cities.md) — 20 个城市节点（景区／菜系／瑰宝）
+- [玩法.md](玩法.md) — 玩法说明书（玩家速查）
+- [game-design.md](game-design.md) — 完整规则书（设计稿）
+- [cities.md](cities.md) — 城市节点（景区／菜系／瑰宝）
 - [card-format.md](card-format.md) — 卡牌排版规范
 - [card-data.md](card-data.md) — 卡牌数据表
 
