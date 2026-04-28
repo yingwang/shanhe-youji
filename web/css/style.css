@@ -292,25 +292,24 @@ body {
 .city-label {
   font-size: 9px;
   fill: var(--text);
-  font-weight: 500;
+  font-weight: 600;
   pointer-events: none;
+  paint-order: stroke fill;
+  stroke: rgba(255, 251, 240, 0.95);
+  stroke-width: 2.5px;
+  stroke-linejoin: round;
 }
 
 .dist-label {
   font-size: 8px;
   fill: var(--text-secondary);
   pointer-events: none;
+  paint-order: stroke fill;
+  stroke: rgba(255, 251, 240, 0.9);
+  stroke-width: 2px;
+  stroke-linejoin: round;
 }
 
-.ink-title {
-  font-size: 38px;
-  fill: #1a1a1e;
-  font-weight: 400;
-  opacity: 0.16;
-  pointer-events: none;
-  font-family: "STKaiti", "KaiTi", "STSong", serif;
-  letter-spacing: 4px;
-}
 
 .player-marker {
   transition: transform 0.3s;
