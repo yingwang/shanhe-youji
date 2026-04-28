@@ -221,7 +221,7 @@ class Game {
     }
 
     if (action.type !== 'rest') {
-      this.actionsRemaining--;
+      this.actionsRemaining -= action.cost.stamina;
     }
 
     // Check milestones
