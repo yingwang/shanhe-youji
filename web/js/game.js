@@ -39,6 +39,7 @@ class Game {
     return {
       id,
       name,
+      isAI: false,
       city: null,
       stamina: 3,
       money: id === 0 ? 8 : 9, // second player gets +1
@@ -106,32 +107,32 @@ class Game {
       }
     }
 
-    // Check-in scenic spots
+    // Check-in scenic spots — tiered ticket: 5★=3, 4★=2, 3★=1, ≤2★=free
     if (player.stamina >= 1) {
       const scenics = SCENIC_CARDS.filter(s => s.city === city && !this.takenScenics.has(s.id));
       for (const s of scenics) {
+        const cost = Math.max(0, s.baseScore - 2);
+        if (player.money < cost) continue;
         actions.push({
           type: 'scenic',
           target: s.id,
-          label: `打卡 ${s.name}`,
-          cost: { stamina: 1, money: 0 },
+          label: cost > 0 ? `打卡 ${s.name}（${cost}金）` : `打卡 ${s.name}`,
+          cost: { stamina: 1, money: cost },
         });
       }
     }
 
-    // Buy food
-    if (player.stamina >= 1) {
-      const foods = FOOD_CARDS.filter(f => f.city === city && !this.takenFoods.has(f.id));
-      for (const f of foods) {
-        const cost = f.cost + player.foodCostModifier;
-        if (player.money >= cost) {
-          actions.push({
-            type: 'food',
-            target: f.id,
-            label: `品尝 ${f.name}（${cost}金）`,
-            cost: { stamina: 1, money: cost },
-          });
-        }
+    // Buy food — only costs money; restores +1 stamina (eat to keep going)
+    const foods = FOOD_CARDS.filter(f => f.city === city && !this.takenFoods.has(f.id));
+    for (const f of foods) {
+      const cost = f.cost + player.foodCostModifier;
+      if (player.money >= cost) {
+        actions.push({
+          type: 'food',
+          target: f.id,
+          label: `品尝 ${f.name}（${cost}金 · +1体）`,
+          cost: { stamina: 0, money: cost },
+        });
       }
     }
 
@@ -192,8 +193,10 @@ class Game {
       case 'food':
         player.foods.add(action.target);
         this.takenFoods.add(action.target);
+        player.stamina += 1;            // eat → +1 stamina
+        this.actionsRemaining += 1;     // extend the current turn by one action
         const food = FOOD_CARDS.find(f => f.id === action.target);
-        this.addLog(`${player.name} 品尝 ${food.name}`);
+        this.addLog(`${player.name} 品尝 ${food.name}（+1体）`);
         break;
 
       case 'treasure':
@@ -481,9 +484,11 @@ class Game {
     }
   }
 
-  startGame(city1, city2, name1, name2) {
+  startGame(city1, city2, name1, name2, ai1 = false, ai2 = false) {
     if (name1) this.players[0].name = name1;
     if (name2) this.players[1].name = name2;
+    this.players[0].isAI = !!ai1;
+    this.players[1].isAI = !!ai2;
     this.players[0].city = city1;
     this.players[0].visitedCities.add(city1);
     this.players[1].city = city2;

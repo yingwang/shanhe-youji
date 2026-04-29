@@ -98,6 +98,18 @@ body {
 .p1-label { color: var(--p1-color); }
 .p2-label { color: var(--p2-color); }
 
+.setup-row .ai-toggle {
+  font-weight: 500;
+  min-width: auto;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 0.3rem;
+  color: var(--text-muted, #6b6b6b);
+  cursor: pointer;
+}
+.setup-row .ai-toggle input { cursor: pointer; }
+
 #start-game-btn {
   margin-top: 1.5rem;
   padding: 0.8rem 2.5rem;

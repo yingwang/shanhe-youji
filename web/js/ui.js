@@ -3,8 +3,11 @@
 class GameUI {
   constructor() {
     this.game = new Game();
+    this.ai = new AI(this.game);
     this.map = null;
     this.selectedAction = null;
+    this.aiTimer = null;
+    this.aiActionDelay = 700; // ms between AI moves so the human can follow
     this.init();
   }
 
@@ -41,6 +44,22 @@ class GameUI {
     }
     p2Select.value = 'hangzhou';
 
+    const p1AI = document.getElementById('p1-ai');
+    const p2AI = document.getElementById('p2-ai');
+    const p1Name = document.getElementById('p1-name');
+    const p2Name = document.getElementById('p2-name');
+    const syncAINameUI = () => {
+      p1Name.disabled = p1AI.checked;
+      p2Name.disabled = p2AI.checked;
+      if (p1AI.checked && !p1Name.value) p1Name.placeholder = 'AI 旅伴';
+      else p1Name.placeholder = '名字';
+      if (p2AI.checked && !p2Name.value) p2Name.placeholder = 'AI 旅伴';
+      else p2Name.placeholder = '名字';
+    };
+    p1AI.onchange = syncAINameUI;
+    p2AI.onchange = syncAINameUI;
+    syncAINameUI();
+
     document.getElementById('start-game-btn').onclick = () => {
       const c1 = p1Select.value;
       const c2 = p2Select.value;
@@ -48,9 +67,11 @@ class GameUI {
         alert('两位旅行者不能选择同一个起点城市！');
         return;
       }
-      const n1 = (document.getElementById('p1-name').value || '').trim();
-      const n2 = (document.getElementById('p2-name').value || '').trim();
-      this.game.startGame(c1, c2, n1, n2);
+      const ai1 = p1AI.checked;
+      const ai2 = p2AI.checked;
+      const n1 = (p1Name.value || '').trim() || (ai1 ? 'AI 旅伴' : '旅行者一');
+      const n2 = (p2Name.value || '').trim() || (ai2 ? 'AI 旅伴' : '旅行者二');
+      this.game.startGame(c1, c2, n1, n2, ai1, ai2);
       document.getElementById('setup-screen').style.display = 'none';
       document.getElementById('game-screen').style.display = 'grid';
       this.updateUI();
@@ -68,7 +89,34 @@ class GameUI {
 
     if (this.game.phase === 'end') {
       this.showEndScreen();
+      return;
     }
+
+    this.scheduleAITurn();
+  }
+
+  scheduleAITurn() {
+    if (this.aiTimer) {
+      clearTimeout(this.aiTimer);
+      this.aiTimer = null;
+    }
+    if (this.game.phase !== 'action') return;
+    const player = this.game.players[this.game.currentPlayer];
+    if (!player.isAI) return;
+
+    this.aiTimer = setTimeout(() => {
+      this.aiTimer = null;
+      // Defensive: state may have changed (e.g. game ended or human reset)
+      if (this.game.phase !== 'action') return;
+      const cur = this.game.players[this.game.currentPlayer];
+      if (!cur.isAI) return;
+
+      const actions = this.game.getAvailableActions();
+      const choice = this.ai.pickAction(actions);
+      if (!choice) return;
+      this.game.executeAction(choice);
+      this.updateUI();
+    }, this.aiActionDelay);
   }
 
   updateHeader() {
@@ -171,7 +219,8 @@ class GameUI {
       for (const a of categories.scenic) {
         const s = SCENIC_CARDS.find(sc => sc.id === a.target);
         const info = this.infoBtn('scenic', s.id);
-        html += `<button class="action-btn scenic-btn" onclick="ui.doActionByIndex(${a.index})">${a.label}（${s.baseScore}分${s.bonus ? ' · ' + s.bonus : ''}）<span class="cost-tag">${a.cost.stamina}体</span>${info}</button>`;
+        const costTag = a.cost.money > 0 ? `${a.cost.stamina}体 ${a.cost.money}金` : `${a.cost.stamina}体`;
+        html += `<button class="action-btn scenic-btn" onclick="ui.doActionByIndex(${a.index})">打卡 ${s.name}（${s.baseScore}分${s.bonus ? ' · ' + s.bonus : ''}）<span class="cost-tag">${costTag}</span>${info}</button>`;
       }
       html += '</div>';
     }
@@ -181,7 +230,7 @@ class GameUI {
       for (const a of categories.food) {
         const f = FOOD_CARDS.find(fc => fc.id === a.target);
         const info = this.infoBtn('food', f.id);
-        html += `<button class="action-btn food-btn" onclick="ui.doActionByIndex(${a.index})">${f.name}<span class="cuisine-tag">${f.cuisine}</span><span class="cost-tag">${a.cost.money}金</span>${info}</button>`;
+        html += `<button class="action-btn food-btn" onclick="ui.doActionByIndex(${a.index})">${f.name}<span class="cuisine-tag">${f.cuisine}</span><span class="cost-tag">${a.cost.money}金 · +1体</span>${info}</button>`;
       }
       html += '</div>';
     }
@@ -420,6 +469,7 @@ class GameUI {
     scoreEl.innerHTML = html;
 
     document.getElementById('restart-btn').onclick = () => {
+      if (this.aiTimer) { clearTimeout(this.aiTimer); this.aiTimer = null; }
       this.game.reset();
       this.showSetupScreen();
     };
